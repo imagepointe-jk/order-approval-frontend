@@ -1,25 +1,34 @@
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import tempImg from "../public/vite.svg";
+import "./App.css";
+import { ApprovalBox } from "./components/ApprovalBox";
+import { ImageContainer } from "./components/ImageContainer";
+import { OrderData } from "./components/OrderData";
+import { OrderStatus } from "./components/OrderStatus";
+import { Role, roles } from "./sharedTypes";
 
 function App() {
+  const tempRole: Role = "approver";
+  const splitURL = document.URL.split("/");
+  const lastURLPiece = splitURL[splitURL.length - 1];
+
   return (
-    <>
+    <div className="main-flex">
       <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+        <ImageContainer img={tempImg} />
+        <OrderData />
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <p>Choo Choo! This is an example of a Vite + React app running on Railway.</p>
-        <p>Updated</p>
+      <div>
+        {roles.map((role) => (
+          <ApprovalBox
+            role={role}
+            initialApprovalStatus="undecided"
+            userPermission={role === tempRole}
+          />
+        ))}
+        <OrderStatus />
       </div>
-    </>
-  )
+    </div>
+  );
 }
 
-export default App
+export default App;

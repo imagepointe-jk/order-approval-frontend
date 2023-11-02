@@ -1,0 +1,30 @@
+html {
+    font-size: 25px;
+}
+
+.main-flex {
+    display: flex;
+}
+
+.image-container {
+    padding: 20px;
+}
+
+.round-border {
+    border-radius: 20px;
+    border: 1px solid lightgray;
+}
+
+.approval-box {
+    display: flex;
+    padding: 20px;
+}
+
+.order-status {
+    text-align: center;
+    padding: 50px;
+}
+
+.capitalize {
+    text-transform: capitalize;
+}

@@ -1,0 +1,25 @@
+.line-items-container {
+  width: 320px;
+  font-size: var(--size-12);
+  max-height: 200px;
+  overflow-y: scroll;
+  border: 1px solid lightgray;
+  padding: 10px;
+}
+
+.line-items-container ul {
+  margin: 0;
+}
+
+.price-row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.line-item:nth-child(even) {
+  background-color: lightgray;
+}
+
+.line-item-tax-row {
+  text-align: right;
+}

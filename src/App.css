@@ -1,30 +1,49 @@
+:root {
+  --size-12: 0.75rem;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
 html {
-    font-size: 25px;
+  font-size: 25px;
+}
+
+body {
+  margin: 0;
+}
+
+header {
+  background-color: purple;
+  height: 100px;
+  margin-bottom: 50px;
 }
 
 .main-flex {
-    display: flex;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
 }
 
 .image-container {
-    padding: 20px;
+  padding: 20px;
 }
 
 .round-border {
-    border-radius: 20px;
-    border: 1px solid lightgray;
-}
-
-.approval-box {
-    display: flex;
-    padding: 20px;
-}
-
-.order-status {
-    text-align: center;
-    padding: 50px;
+  border-radius: 20px;
+  border: 1px solid lightgray;
 }
 
 .capitalize {
-    text-transform: capitalize;
+  text-transform: capitalize;
+}
+
+.approval-column {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }

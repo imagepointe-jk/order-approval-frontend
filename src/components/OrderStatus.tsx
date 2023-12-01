@@ -1,3 +1,9 @@
+import styles from "./styles/OrderStatus.module.css";
+
 export function OrderStatus() {
-  return <div className="order-status round-border">Waiting On Proof</div>;
+  return (
+    <div className={`${styles["order-status-container"]} round-border`}>
+      Waiting On Proof
+    </div>
+  );
 }

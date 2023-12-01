@@ -1,0 +1,26 @@
+.main-container {
+  padding: 20px;
+  padding-top: 40px;
+  position: relative;
+  overflow: hidden;
+}
+
+.input-area {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.role-heading {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: lightgray;
+  font-size: var(--size-12);
+  padding: 3px 10px;
+}
+
+.other-user-approval-text {
+  font-style: italic;
+}

@@ -5,13 +5,18 @@ import { ApprovalBox } from "./components/ApprovalBox";
 import { ImageContainer } from "./components/ImageContainer";
 import { OrderData } from "./components/OrderData";
 import { OrderStatus } from "./components/OrderStatus";
-import { WorkflowData, roles } from "./sharedTypes";
+import { WorkflowData } from "./sharedTypes";
 import { fetchWorkflowData } from "./fetch";
+import { ApprovalConfirmationModal } from "./components/ApprovalConfirmationModal";
+import { useApprovalStatus } from "./components/ApprovalStatusProvider";
 
 function App() {
   const [workflowData, setWorkflowData] = useState(
     undefined as WorkflowData | undefined
   );
+
+  const { currentRequestedChange, setCurrentRequestedChange } =
+    useApprovalStatus(); //TODO: figure out why these are sometimes undefined
 
   async function fetchData() {
     const splitURL = document.URL.split("/");
@@ -24,6 +29,20 @@ function App() {
     }
 
     setWorkflowData(fetchedData.data);
+  }
+
+  function changeApprovalStatus() {
+    if (!workflowData || !currentRequestedChange || !setCurrentRequestedChange)
+      return;
+
+    const newWorkflowData = { ...workflowData };
+    const userWithRole = newWorkflowData.userData.users.find(
+      (user) => user.role === currentRequestedChange.role
+    );
+    if (userWithRole)
+      userWithRole.approvalStatus = currentRequestedChange.approvalStatus;
+
+    setWorkflowData(newWorkflowData);
   }
 
   useEffect(() => {
@@ -53,7 +72,7 @@ function App() {
               .map((user) => (
                 <ApprovalBox
                   role={user.role}
-                  initialApprovalStatus={user.approvalStatus}
+                  approvalStatus={user.approvalStatus}
                   userPermission={
                     user.role === workflowData.userData.activeUser.role
                   }
@@ -62,6 +81,16 @@ function App() {
             <OrderStatus />
           </div>
         </div>
+      )}
+      {currentRequestedChange && setCurrentRequestedChange && (
+        <ApprovalConfirmationModal
+          onYes={() => {
+            console.log("Confirmed!");
+            changeApprovalStatus();
+            setCurrentRequestedChange(null);
+          }}
+          onNo={() => setCurrentRequestedChange(null)}
+        />
       )}
     </>
   );

@@ -1,21 +1,28 @@
-import { useState } from "react";
+import { ChangeEventHandler, useState } from "react";
 import { ApprovalStatus, Role, approvalStatuses } from "../sharedTypes";
 import styles from "./styles/ApprovalBox.module.css";
+import { useApprovalStatus } from "./ApprovalStatusProvider";
 
 type ApprovalBoxProps = {
   role: Role;
   userPermission: boolean; //does the user have permission to edit this box?
-  initialApprovalStatus: ApprovalStatus; // the approval status when the page is first visited
+  approvalStatus: ApprovalStatus;
 };
 
 export function ApprovalBox({
   role,
   userPermission,
-  initialApprovalStatus,
+  approvalStatus,
 }: ApprovalBoxProps) {
-  const [approvalState, setApprovalState] = useState<ApprovalStatus>(
-    initialApprovalStatus
-  );
+  const { setCurrentRequestedChange } = useApprovalStatus();
+  function clickNewStatus(role: Role, approvalStatus: ApprovalStatus) {
+    if (!setCurrentRequestedChange) return;
+
+    setCurrentRequestedChange({
+      approvalStatus,
+      role,
+    });
+  }
 
   return (
     <div className={`${styles["main-container"]} round-border`}>
@@ -29,8 +36,8 @@ export function ApprovalBox({
                   type="radio"
                   name={`${role}-approvalStatus`}
                   id={`${role}-${status}`}
-                  checked={approvalState === status}
-                  onChange={() => setApprovalState(status)}
+                  checked={approvalStatus === status}
+                  onChange={() => clickNewStatus(role, status)}
                 />
                 <span className="capitalize">{status}</span>
               </label>
@@ -39,7 +46,7 @@ export function ApprovalBox({
         )}
         {!userPermission && (
           <div className={`${styles["other-user-approval-text"]} capitalize`}>
-            {approvalState}
+            {approvalStatus}
           </div>
         )}
       </div>

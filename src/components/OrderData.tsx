@@ -7,19 +7,29 @@ type OrderDataProps = {
   lineItems: WooCommerceLineItem[];
   total: string;
   totalTax: string;
-  allowEdits: boolean;
+  userPermission: boolean;
+  feesTotal: number;
+  shippingTotal: number;
 };
 
 //! For some reason the order total coming from WooCommerce is not equal to the
 //! price of the line items plus their tax. This should be investigated.
 
 export function OrderData({
-  allowEdits,
+  userPermission,
   lineItems,
   total,
   totalTax,
   wcOrderId,
+  feesTotal,
+  shippingTotal,
 }: OrderDataProps) {
+  const feesLine = generateDottedPriceRow("Fees", feesTotal.toFixed(2), 40);
+  const shippingLine = generateDottedPriceRow(
+    "Shipping",
+    shippingTotal.toFixed(2),
+    40
+  );
   const bottomLine = generateDottedPriceRow("Total", total, 40);
 
   return (
@@ -54,6 +64,16 @@ export function OrderData({
             </div>
           );
         })}
+      </div>
+      <div className={styles["price-row"]}>
+        {shippingLine.map((part) => (
+          <div>{part}</div>
+        ))}
+      </div>
+      <div className={styles["price-row"]}>
+        {feesLine.map((part) => (
+          <div>{part}</div>
+        ))}
       </div>
       <div className={styles["price-row"]}>
         {bottomLine.map((part) => (

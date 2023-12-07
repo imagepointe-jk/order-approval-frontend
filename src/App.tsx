@@ -57,11 +57,18 @@ function App() {
           <div>
             <ImageContainer img={tempImg} />
             <OrderData
-              allowEdits={false}
+              userPermission={
+                workflowData.userData.activeUser.role === "editor"
+              }
               lineItems={workflowData.lineItems}
               total={workflowData.total}
               totalTax={workflowData.totalTax}
               wcOrderId={workflowData.wcOrderId}
+              shippingTotal={+workflowData.shippingTotal}
+              feesTotal={workflowData.feeLines.reduce(
+                (accum, fee) => accum + +fee.total,
+                0
+              )}
             />
           </div>
           <div className="approval-column">

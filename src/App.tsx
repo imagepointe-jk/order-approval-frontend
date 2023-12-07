@@ -9,11 +9,13 @@ import { WorkflowData } from "./sharedTypes";
 import { fetchWorkflowData } from "./fetch";
 import { ApprovalConfirmationModal } from "./components/ApprovalConfirmationModal";
 import { useApprovalStatus } from "./components/ApprovalStatusProvider";
+import { AccessErrorScreen } from "./components/AccessErrorScreen";
 
 function App() {
   const [workflowData, setWorkflowData] = useState(
     undefined as WorkflowData | undefined
   );
+  const [isLoading, setIsLoading] = useState(true);
 
   const { currentRequestedChange, setCurrentRequestedChange } =
     useApprovalStatus(); //TODO: figure out why these are sometimes undefined
@@ -25,9 +27,11 @@ function App() {
     const fetchedData = await fetchWorkflowData(lastURLPiece);
     if (!fetchedData.data) {
       console.error(fetchedData.error);
+      setIsLoading(false);
       return;
     }
 
+    setIsLoading(false);
     setWorkflowData(fetchedData.data);
   }
 
@@ -49,46 +53,55 @@ function App() {
     fetchData();
   }, []);
 
+  if (isLoading)
+    return (
+      <div style={{ textAlign: "center" }}>
+        <header></header>
+        <h2>Loading...</h2>
+      </div>
+    );
+  if (!workflowData)
+    return (
+      <>
+        <header></header>
+        <AccessErrorScreen />
+      </>
+    );
+
   return (
     <>
       <header></header>
-      {workflowData && (
-        <div className="main-flex">
-          <div>
-            <ImageContainer img={tempImg} />
-            <OrderData
-              userPermission={
-                workflowData.userData.activeUser.role === "editor"
-              }
-              lineItems={workflowData.lineItems}
-              total={workflowData.total}
-              totalTax={workflowData.totalTax}
-              wcOrderId={workflowData.wcOrderId}
-              shippingTotal={+workflowData.shippingTotal}
-              feesTotal={workflowData.feeLines.reduce(
-                (accum, fee) => accum + +fee.total,
-                0
-              )}
-            />
-          </div>
-          <div className="approval-column">
-            {workflowData.userData.users
-              .filter(
-                (user) => user.role !== "artist" && user.role !== "editor"
-              )
-              .map((user) => (
-                <ApprovalBox
-                  role={user.role}
-                  approvalStatus={user.approvalStatus}
-                  userPermission={
-                    user.role === workflowData.userData.activeUser.role
-                  }
-                />
-              ))}
-            <OrderStatus />
-          </div>
+      <div className="main-flex">
+        <div>
+          <ImageContainer img={tempImg} />
+          <OrderData
+            userPermission={workflowData.userData.activeUser.role === "editor"}
+            lineItems={workflowData.lineItems}
+            total={workflowData.total}
+            totalTax={workflowData.totalTax}
+            wcOrderId={workflowData.wcOrderId}
+            shippingTotal={+workflowData.shippingTotal}
+            feesTotal={workflowData.feeLines.reduce(
+              (accum, fee) => accum + +fee.total,
+              0
+            )}
+          />
         </div>
-      )}
+        <div className="approval-column">
+          {workflowData.userData.users
+            .filter((user) => user.role !== "artist" && user.role !== "editor")
+            .map((user) => (
+              <ApprovalBox
+                role={user.role}
+                approvalStatus={user.approvalStatus}
+                userPermission={
+                  user.role === workflowData.userData.activeUser.role
+                }
+              />
+            ))}
+          <OrderStatus />
+        </div>
+      </div>
       {currentRequestedChange && setCurrentRequestedChange && (
         <ApprovalConfirmationModal
           onYes={() => {

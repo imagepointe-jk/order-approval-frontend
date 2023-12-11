@@ -10,6 +10,7 @@ import { fetchWorkflowData } from "./fetch";
 import { ApprovalConfirmationModal } from "./components/ApprovalConfirmationModal";
 import { useApprovalStatus } from "./components/ApprovalStatusProvider";
 import { AccessErrorScreen } from "./components/AccessErrorScreen";
+import { getAccessCodeFromURL } from "./utility";
 
 function App() {
   const [workflowData, setWorkflowData] = useState(
@@ -21,10 +22,8 @@ function App() {
     useApprovalStatus(); //TODO: figure out why these are sometimes undefined
 
   async function fetchData() {
-    const splitURL = document.URL.split("/");
-    const lastURLPiece = splitURL[splitURL.length - 1];
-
-    const fetchedData = await fetchWorkflowData(lastURLPiece);
+    const accessCode = getAccessCodeFromURL();
+    const fetchedData = await fetchWorkflowData(accessCode);
     if (!fetchedData.data) {
       console.error(fetchedData.error);
       setIsLoading(false);
@@ -75,7 +74,9 @@ function App() {
         <div>
           <ImageContainer img={tempImg} />
           <OrderData
-            userPermission={workflowData.userData.activeUser.role === "editor"}
+            editingPermission={
+              workflowData.userData.activeUser.role === "editor"
+            }
             lineItems={workflowData.lineItems}
             total={workflowData.total}
             totalTax={workflowData.totalTax}
@@ -85,6 +86,7 @@ function App() {
               (accum, fee) => accum + +fee.total,
               0
             )}
+            refreshDataFunction={fetchData}
           />
         </div>
         <div className="approval-column">

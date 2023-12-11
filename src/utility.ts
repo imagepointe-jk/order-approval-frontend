@@ -16,3 +16,9 @@ export function generateDottedPriceRow(
   );
   return [leftText, ".".repeat(dotsCount), `$${dollarAmountStr}`];
 }
+
+export function getAccessCodeFromURL() {
+  const splitURL = document.URL.split("/");
+  const lastURLPiece = splitURL[splitURL.length - 1];
+  return lastURLPiece;
+}

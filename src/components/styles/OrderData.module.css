@@ -23,3 +23,7 @@
 .line-item-tax-row {
   text-align: right;
 }
+
+.line-item-number-input {
+  width: 60px;
+}

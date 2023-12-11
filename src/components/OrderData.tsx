@@ -32,6 +32,7 @@ export function OrderData({
   const [editRequestError, setEditRequestError] = useState(
     null as string | null
   );
+  const [isUpdatingData, setIsUpdatingData] = useState(false);
   const feesLine = generateDottedPriceRow("Fees", feesTotal.toFixed(2), 40);
   const shippingLine = generateDottedPriceRow(
     "Shipping",
@@ -53,8 +54,8 @@ export function OrderData({
   }
 
   async function submitChanges() {
+    setIsUpdatingData(true);
     const accessCode = getAccessCodeFromURL();
-    console.log("sending...");
     const response = await modifyWooCommerceLineItems(
       accessCode,
       lineItemsState
@@ -64,12 +65,8 @@ export function OrderData({
       setLineItemsState(initialLineItems);
       return;
     }
-    const json = await response.json();
     await refreshDataFunction();
-    // const parsed = parseWooCommerceLineItemsJson(json);
-    console.log("success!");
-    //! Currently the order total does not visually update after a successful edit without a page refresh
-    // setLineItemsState(parsed);
+    alert("The order has been updated successfully.");
   }
 
   //TODO: allow editor to revert changes instead of submitting them
@@ -107,6 +104,7 @@ export function OrderData({
       {editingPermission && (
         <button onClick={() => submitChanges()}>Submit Changes</button>
       )}
+      {isUpdatingData && <div>Updating...</div>}
       {editingPermission && editRequestError && (
         <div style={{ color: "red" }}>{editRequestError}</div>
       )}

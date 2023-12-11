@@ -22,6 +22,7 @@ function App() {
     useApprovalStatus(); //TODO: figure out why these are sometimes undefined
 
   async function fetchData() {
+    setIsLoading(true);
     const accessCode = getAccessCodeFromURL();
     const fetchedData = await fetchWorkflowData(accessCode);
     if (!fetchedData.data) {

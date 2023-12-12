@@ -29,10 +29,6 @@ header {
   gap: 20px;
 }
 
-.image-container {
-  padding: 20px;
-}
-
 .round-border {
   border-radius: 20px;
   border: 1px solid lightgray;

@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import tempImg from "../public/vite.svg";
 import "./App.css";
 import { ApprovalBox } from "./components/ApprovalBox";
 import { ImageContainer } from "./components/ImageContainer";
@@ -73,7 +72,7 @@ function App() {
       <header></header>
       <div className="main-flex">
         <div>
-          <ImageContainer img={tempImg} />
+          <ImageContainer imgUrl={workflowData.imageUrl} />
           <OrderData
             editingPermission={
               workflowData.userData.activeUser.role === "editor"

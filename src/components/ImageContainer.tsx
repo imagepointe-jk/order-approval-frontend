@@ -1,11 +1,19 @@
+import styles from "./styles/ImageContainer.module.css";
+
 type ImageContainerProps = {
-  img: string;
+  imgUrl: string;
 };
 
-export function ImageContainer({ img }: ImageContainerProps) {
+export function ImageContainer({ imgUrl }: ImageContainerProps) {
   return (
-    <div className="image-container round-border">
-      <img src={img} alt="" />
+    <div className={`round-border ${styles["main"]}`}>
+      <img
+        src={imgUrl}
+        alt="art-proof"
+        onError={(e) => {
+          (e.target as any).src = "https://placehold.co/300x300?text=No+Image";
+        }}
+      />
     </div>
   );
 }
